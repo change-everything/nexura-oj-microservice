@@ -11,7 +11,7 @@ import cn.nexura.model.vo.QuestionVO;
 import cn.nexura.model.vo.UserVO;
 import cn.nexura.questionservice.mapper.QuestionMapper;
 import cn.nexura.questionservice.service.QuestionService;
-import cn.nexura.serviceclient.service.UserService;
+import cn.nexura.serviceclient.service.UserFeignClient;
 import cn.nexura.utils.SqlUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -41,7 +41,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
     private final static Gson GSON = new Gson();
 
     @Resource
-    private UserService userService;
+    private UserFeignClient userFeignClient;
 
     @Override
     public void validQuestion(Question question, boolean add) {
@@ -127,9 +127,12 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         Long userId = question.getUserId();
         User user = null;
         if (userId != null && userId > 0) {
-            user = userService.getById(userId);
+            user = userFeignClient.getUserById(userId);
         }
-        UserVO userVO = userService.getUserVO(user);
+        UserVO userVO = null;
+        if (user != null) {
+            userVO = userFeignClient.getUserVO(user);
+        }
         questionVO.setUser(userVO);
         return questionVO;
     }
@@ -143,7 +146,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         }
         // 1. 关联查询用户信息
         Set<Long> userIdSet = questionList.stream().map(Question::getUserId).collect(Collectors.toSet());
-        Map<Long, List<User>> userIdUserListMap = userService.listByIds(userIdSet).stream()
+        Map<Long, List<User>> userIdUserListMap = userFeignClient.listByUserIds(userIdSet).stream()
                 .collect(Collectors.groupingBy(User::getId));
 
         // 填充信息
@@ -154,7 +157,9 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
             if (userIdUserListMap.containsKey(userId)) {
                 user = userIdUserListMap.get(userId).get(0);
             }
-            questionVO.setUser(userService.getUserVO(user));
+            if (user != null) {
+                questionVO.setUser(userFeignClient.getUserVO(user));
+            }
             return questionVO;
         }).collect(Collectors.toList());
         questionVOPage.setRecords(questionVOList);

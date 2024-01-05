@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * @author https://github.com/liyupi
  */
 @Configuration
-@MapperScan("cn.nexura")
+@MapperScan("cn.nexura.*.mapper")
 public class MyBatisPlusConfig {
 
     /**

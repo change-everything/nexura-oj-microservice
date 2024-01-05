@@ -14,8 +14,8 @@ import cn.nexura.model.vo.QuestionSubmitVO;
 import cn.nexura.questionservice.mapper.QuestionSubmitMapper;
 import cn.nexura.questionservice.service.QuestionService;
 import cn.nexura.questionservice.service.QuestionSubmitService;
-import cn.nexura.serviceclient.service.JudgeService;
-import cn.nexura.serviceclient.service.UserService;
+import cn.nexura.serviceclient.service.JudgeFeignClient;
+import cn.nexura.serviceclient.service.UserFeignClient;
 import cn.nexura.utils.SqlUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -42,12 +42,13 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     @Resource
     private QuestionService questionService;
 
+
     @Resource
-    private UserService userService;
+    private UserFeignClient userFeignClient;
 
     @Resource
     @Lazy
-    private JudgeService judgeService;
+    private JudgeFeignClient judgeFeignClient;
 
     /**
      * 题目提交
@@ -90,7 +91,7 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         Long submitId = questionSubmit.getId();
         // 2024/1/2 执行判题服务
         CompletableFuture.runAsync(() -> {
-            judgeService.doJudge(submitId);
+            judgeFeignClient.doJudge(submitId);
         });
         return submitId;
     }
@@ -102,7 +103,7 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         // 脱敏：仅本人和管理员能看见自己（提交 userId 和登录用户 id 不同）提交的代码
         long userId = loginUser.getId();
         // 处理脱敏
-        if (userId != questionSubmit.getUserId() && !userService.isAdmin(loginUser)) {
+        if (userId != questionSubmit.getUserId() && !userFeignClient.isAdmin(loginUser)) {
             questionSubmitVO.setCode(null);
         }
         return questionSubmitVO;

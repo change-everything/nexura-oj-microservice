@@ -1,4 +1,4 @@
-package cn.nexura.judgeservice.judege.codesandbox;
+package cn.nexura.judgeservice.codesandbox;
 
 
 import cn.nexura.model.codesandbox.ExecuteCodeRequest;

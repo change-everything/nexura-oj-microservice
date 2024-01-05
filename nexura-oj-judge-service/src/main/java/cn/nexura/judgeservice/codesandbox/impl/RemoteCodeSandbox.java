@@ -1,11 +1,11 @@
-package cn.nexura.judgeservice.judege.codesandbox.impl;
+package cn.nexura.judgeservice.codesandbox.impl;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import cn.nexura.common.ErrorCode;
 import cn.nexura.exception.BusinessException;
-import cn.nexura.judgeservice.judege.codesandbox.CodeSandbox;
+import cn.nexura.judgeservice.codesandbox.CodeSandbox;
 import cn.nexura.model.codesandbox.ExecuteCodeRequest;
 import cn.nexura.model.codesandbox.ExecuteCodeResponse;
 

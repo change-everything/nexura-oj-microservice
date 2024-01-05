@@ -1,4 +1,4 @@
-package cn.nexura.judgeservice.judege.strategy;
+package cn.nexura.judgeservice.strategy;
 
 import cn.hutool.json.JSONUtil;
 import cn.nexura.model.codesandbox.JudgeInfo;

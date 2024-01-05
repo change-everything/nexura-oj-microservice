@@ -1,7 +1,7 @@
-package cn.nexura.judgeservice.judege.codesandbox.impl;
+package cn.nexura.judgeservice.codesandbox.impl;
 
 
-import cn.nexura.judgeservice.judege.codesandbox.CodeSandbox;
+import cn.nexura.judgeservice.codesandbox.CodeSandbox;
 import cn.nexura.model.codesandbox.ExecuteCodeRequest;
 import cn.nexura.model.codesandbox.ExecuteCodeResponse;
 

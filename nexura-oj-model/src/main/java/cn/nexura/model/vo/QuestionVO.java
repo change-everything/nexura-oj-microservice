@@ -3,6 +3,7 @@ package cn.nexura.model.vo;
 import cn.hutool.json.JSONUtil;
 import cn.nexura.model.dto.question.JudgeConfig;
 import cn.nexura.model.entity.Question;
+import cn.nexura.model.entity.User;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 

@@ -1,13 +1,13 @@
-package cn.nexura.judgeservice.judege;
+package cn.nexura.judgeservice;
 
 import cn.hutool.json.JSONUtil;
 import cn.nexura.common.ErrorCode;
 import cn.nexura.exception.BusinessException;
-import cn.nexura.judgeservice.judege.codesandbox.CodeSandbox;
-import cn.nexura.judgeservice.judege.codesandbox.CodeSandboxFactory;
-import cn.nexura.judgeservice.judege.codesandbox.CodeSandboxProxy;
-import cn.nexura.judgeservice.judege.strategy.JudgeContext;
-import cn.nexura.judgeservice.judege.strategy.JudgeManager;
+import cn.nexura.judgeservice.codesandbox.CodeSandbox;
+import cn.nexura.judgeservice.codesandbox.CodeSandboxFactory;
+import cn.nexura.judgeservice.codesandbox.CodeSandboxProxy;
+import cn.nexura.judgeservice.strategy.JudgeContext;
+import cn.nexura.judgeservice.strategy.JudgeManager;
 import cn.nexura.model.codesandbox.ExecuteCodeRequest;
 import cn.nexura.model.codesandbox.ExecuteCodeResponse;
 import cn.nexura.model.codesandbox.JudgeInfo;
@@ -15,8 +15,7 @@ import cn.nexura.model.dto.question.JudgeCase;
 import cn.nexura.model.entity.Question;
 import cn.nexura.model.entity.QuestionSubmit;
 import cn.nexura.model.enums.QuestionSubmitStatusEnum;
-import cn.nexura.serviceclient.service.QuestionService;
-import cn.nexura.serviceclient.service.QuestionSubmitService;
+import cn.nexura.serviceclient.service.QuestionFeignClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -31,10 +30,7 @@ import java.util.stream.Collectors;
 @Service
 public class JudgeServiceImpl implements JudgeService {
     @Resource
-    private QuestionService questionService;
-
-    @Resource
-    private QuestionSubmitService questionSubmitService;
+    private QuestionFeignClient questionFeignClient;
 
     @Resource
     private JudgeManager judgeManager;
@@ -46,14 +42,14 @@ public class JudgeServiceImpl implements JudgeService {
     public QuestionSubmit doJudge(long questionSubmitId) {
 
         // 查询题目是否提交成功
-        QuestionSubmit questionSubmit = questionSubmitService.getById(questionSubmitId);
+        QuestionSubmit questionSubmit = questionFeignClient.getQuestionSubmitById(questionSubmitId);
         if (null == questionSubmit) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "提交信息不存在");
         }
 
         //  查询是否有此题目
         Long questionId = questionSubmit.getQuestionId();
-        Question question = questionService.getById(questionId);
+        Question question = questionFeignClient.getQuestionById(questionId);
         if (null == question) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "题目不存在");
         }
@@ -67,7 +63,7 @@ public class JudgeServiceImpl implements JudgeService {
         QuestionSubmit questionSubmitUpdate = new QuestionSubmit();
         questionSubmitUpdate.setId(questionSubmitId);
         questionSubmitUpdate.setStatus(QuestionSubmitStatusEnum.RUNNING.getValue());
-        boolean update = questionSubmitService.updateById(questionSubmitUpdate);
+        boolean update = questionFeignClient.updateQuestionSubmitById(questionSubmitUpdate);
         if (!update) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "题目状态更新错误");
         }
@@ -110,12 +106,12 @@ public class JudgeServiceImpl implements JudgeService {
         questionSubmitUpdate.setId(questionSubmitId);
         questionSubmitUpdate.setStatus(QuestionSubmitStatusEnum.SUCCESS.getValue());
         questionSubmitUpdate.setJudgeInfo(JSONUtil.toJsonStr(judgeInfo));
-        update = questionSubmitService.updateById(questionSubmitUpdate);
+        update = questionFeignClient.updateQuestionSubmitById(questionSubmitUpdate);
         if (!update) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "题目状态更新错误");
         }
 
-        QuestionSubmit questionSubmitResult = questionSubmitService.getById(questionSubmitId);
+        QuestionSubmit questionSubmitResult = questionFeignClient.getQuestionSubmitById(questionSubmitId);
         return questionSubmitResult;
     }
 }

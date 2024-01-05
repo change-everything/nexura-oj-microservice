@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: nexura-oj-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 120.46.207.211:8848
+    gateway:
+      routes:
+        - id: nexura-oj-user-service
+          uri: lb://nexura-oj-user-service
+          predicates:
+            - Path=/api/user/**
+        - id: nexura-oj-question-service
+          uri: lb://nexura-oj-question-service
+          predicates:
+            - Path=/api/question/**
+        - id: nexura-oj-judge-service
+          uri: lb://nexura-oj-judge-service
+          predicates:
+            - Path=/api/judge/**
+  main:
+    web-application-type: reactive
+server:
+  port: 8100
+
+
+knife4j:
+  gateway:
+    enabled: true
+    strategy: discover
+    discover:
+      enabled: true
+      version: swagger2

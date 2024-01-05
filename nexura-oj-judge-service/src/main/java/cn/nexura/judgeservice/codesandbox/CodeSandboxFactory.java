@@ -1,9 +1,9 @@
-package cn.nexura.judgeservice.judege.codesandbox;
+package cn.nexura.judgeservice.codesandbox;
 
 
-import cn.nexura.judgeservice.judege.codesandbox.impl.ExampleCodeSandbox;
-import cn.nexura.judgeservice.judege.codesandbox.impl.RemoteCodeSandbox;
-import cn.nexura.judgeservice.judege.codesandbox.impl.ThirdPartyCodeSandbox;
+import cn.nexura.judgeservice.codesandbox.impl.ExampleCodeSandbox;
+import cn.nexura.judgeservice.codesandbox.impl.RemoteCodeSandbox;
+import cn.nexura.judgeservice.codesandbox.impl.ThirdPartyCodeSandbox;
 
 /**
  * 代码沙箱工厂

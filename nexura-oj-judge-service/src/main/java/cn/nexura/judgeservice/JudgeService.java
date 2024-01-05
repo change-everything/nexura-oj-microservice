@@ -1,4 +1,4 @@
-package cn.nexura.serviceclient.service;
+package cn.nexura.judgeservice;
 
 
 import cn.nexura.model.entity.QuestionSubmit;
