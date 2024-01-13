@@ -18,17 +18,17 @@ spring:
   # todo 需替换配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/nexura_oj
+    url: xxx
     username: root
     password: 123456
   # Redis 配置
   # todo 需替换配置，然后取消注释
   redis:
     database: 1
-    host: 120.46.207.211
+    host: xxx
     port: 6379
     timeout: 5000
-    password: tjdxdykw.123
+    password: xxx
   # Elasticsearch 配置
   # todo 需替换配置，然后取消注释
 #  elasticsearch:
@@ -43,7 +43,7 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 120.46.207.211:8848
+        server-addr: xxx
         password: nacos
         username: nacos
         enabled: true
